@@ -1,23 +1,19 @@
 import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
-import store from 'redux/store';
-import { Provider } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
+import { addContact, deleteContact } from 'redux/actions';
 
 import css from './ContactForm/ContactForm.module.css';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const contacts = JSON.parse(localStorage.getItem('my-contacts'));
-    //   // якщо contacts null - повертаємо []
-    //   // якщо contact пустий масив або повний - повертємо contacts
-    return contacts ? contacts : [];
-  });
-
+  // дістаємо зі store contacts
+  const contacts = useSelector(store => store.contacts);
   const [filter, setFilter] = useState('');
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // ця ф-я спрацьовує вдруге, коли в масив додається щось або видаляється
@@ -37,27 +33,19 @@ export const App = () => {
     // булеве значення undefind - false
     return Boolean(result);
   };
-  const addContact = ({ name, number }) => {
+  const handleAddContact = ({ name, number }) => {
     if (isDublicate({ name, number })) {
       alert(`${name}: ${number} is already in contacts`);
       return false;
     }
-    setContacts(prevContacts => {
-      const newContact = {
-        id: nanoid(),
-        name,
-        number,
-      };
-      return [newContact, ...prevContacts];
-    });
-    return true;
+    // що зробити
+    const action = addContact({ name, number });
+    // dispatch передає action reducer
+    dispatch(action);
   };
-  const removeContact = id => {
-    setContacts(prevContacts =>
-      // фільтруємо попередні контакти, повертається новий масив з контактами
-      // крім того, що треба виділити
-      prevContacts.filter(contact => contact.id !== id)
-    );
+  const handleDeleteContact = id => {
+    const action = deleteContact(id);
+    dispatch(action);
   };
   const handleFilter = ({ target }) => setFilter(target.value);
 
@@ -80,20 +68,18 @@ export const App = () => {
   const filteredContacts = getFilteredContacts();
   const isContacts = Boolean(filteredContacts.length);
   return (
-    <Provider store={store}>
-      <div>
-        <h1 className={css.title}>Phonebook</h1>
-        <ContactForm onSubmit={addContact} />
-        <h2 className={css.title}>Contacts</h2>
-        <Filter handleInputChange={handleFilter} value={filter} />
-        {isContacts && (
-          <ContactList
-            contacts={filteredContacts}
-            removeContact={removeContact}
-          />
-        )}
-        {!isContacts && <p>No contacts in list</p>}
-      </div>
-    </Provider>
+    <div>
+      <h1 className={css.title}>Phonebook</h1>
+      <ContactForm onSubmit={handleAddContact} />
+      <h2 className={css.title}>Contacts</h2>
+      <Filter handleInputChange={handleFilter} value={filter} />
+      {isContacts && (
+        <ContactList
+          removeContact={handleDeleteContact}
+          contacts={filteredContacts}
+        />
+      )}
+      {!isContacts && <p>No contacts in list</p>}
+    </div>
   );
 };
