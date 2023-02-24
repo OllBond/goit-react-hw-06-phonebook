@@ -1,22 +1,12 @@
+import { createAction } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
-import { ADD_CONTACT, DELETE_CONTACT } from './contacts-types';
-// payload - з чим зробити - це наш контакт
-export const addContact = payload => {
-  // повертає об'єкт що зробити і з чим зробити
+
+export const addContact = createAction('contacts / add', data => {
   return {
-    //  що зробити?  додати
-    type: ADD_CONTACT,
-    // з чим зробити - з новим контактом
     payload: {
+      ...data,
       id: nanoid(),
-      ...payload,
     },
   };
-};
-
-export const deleteContact = payload => {
-  return {
-    type: DELETE_CONTACT,
-    payload,
-  };
-};
+});
+export const deleteContact = createAction('contacts/delete');
