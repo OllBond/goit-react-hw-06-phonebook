@@ -21,11 +21,6 @@ export const App = () => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   // ця ф-я спрацьовує вдруге, коли в масив додається щось або видаляється
-  //   localStorage.setItem('my-contacts', JSON.stringify(contacts));
-  // }, [contacts]);
-
   const isDublicate = ({ name }) => {
     const normalizedName = name.toLowerCase();
     // щоб знайти елемент в масиві
