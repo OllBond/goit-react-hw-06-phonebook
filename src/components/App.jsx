@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
+import store from 'redux/store';
+import { Provider } from 'react-redux';
 
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
@@ -78,18 +80,20 @@ export const App = () => {
   const filteredContacts = getFilteredContacts();
   const isContacts = Boolean(filteredContacts.length);
   return (
-    <div>
-      <h1 className={css.title}>Phonebook</h1>
-      <ContactForm onSubmit={addContact} />
-      <h2 className={css.title}>Contacts</h2>
-      <Filter handleInputChange={handleFilter} value={filter} />
-      {isContacts && (
-        <ContactList
-          contacts={filteredContacts}
-          removeContact={removeContact}
-        />
-      )}
-      {!isContacts && <p>No contacts in list</p>}
-    </div>
+    <Provider store={store}>
+      <div>
+        <h1 className={css.title}>Phonebook</h1>
+        <ContactForm onSubmit={addContact} />
+        <h2 className={css.title}>Contacts</h2>
+        <Filter handleInputChange={handleFilter} value={filter} />
+        {isContacts && (
+          <ContactList
+            contacts={filteredContacts}
+            removeContact={removeContact}
+          />
+        )}
+        {!isContacts && <p>No contacts in list</p>}
+      </div>
+    </Provider>
   );
 };
