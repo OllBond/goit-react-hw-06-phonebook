@@ -1,31 +1,37 @@
-import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import ContactList from './ContactList/ContactList';
-import { addContact, deleteContact } from 'redux/actions';
+
+import { addContact, deleteContact } from 'redux/contacts/contacts-actions';
+import { setFilter } from 'redux/filter/filter-actions';
+import {
+  getAllContacts,
+  getFilteredContacts,
+} from 'redux/contacts/contacts-selectors';
+import { getFilter } from 'redux/filter/filter-selectors';
 
 import css from './ContactForm/ContactForm.module.css';
 
 export const App = () => {
-  // дістаємо зі store contacts
-  const contacts = useSelector(store => store.contacts);
-  const [filter, setFilter] = useState('');
+  const filteredContacts = useSelector(getFilteredContacts);
+  const allContacts = useSelector(getAllContacts);
+  const filter = useSelector(getFilter);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // ця ф-я спрацьовує вдруге, коли в масив додається щось або видаляється
-    localStorage.setItem('my-contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   // ця ф-я спрацьовує вдруге, коли в масив додається щось або видаляється
+  //   localStorage.setItem('my-contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
   const isDublicate = ({ name }) => {
     const normalizedName = name.toLowerCase();
     // щоб знайти елемент в масиві
     // якщо знайщеться в contact буде об'єкт
     // якщо не здайде - undefind
-    const result = contacts.find(({ name }) => {
+    const result = allContacts.find(({ name }) => {
       return name.toLowerCase() === normalizedName;
     });
     // треба повернути або true або false
@@ -47,25 +53,10 @@ export const App = () => {
     const action = deleteContact(id);
     dispatch(action);
   };
-  const handleFilter = ({ target }) => setFilter(target.value);
-
-  const getFilteredContacts = () => {
-    // якщо фільтр пустий - повертати масив контактів не фільтрувати
-    if (!filter) {
-      return contacts;
-    }
-    const normalizedFilter = filter.toLowerCase();
-    const result = contacts.filter(({ name, number }) => {
-      return (
-        // якщо у name є ці кілька літер - вертає true
-        name.toLowerCase().includes(normalizedFilter) ||
-        // або якщо у number є ці кілька цифр - вертає true
-        number.toLowerCase().includes(normalizedFilter)
-      );
-    });
-    return result;
+  const handleFilter = ({ target }) => {
+    dispatch(setFilter(target.value));
   };
-  const filteredContacts = getFilteredContacts();
+
   const isContacts = Boolean(filteredContacts.length);
   return (
     <div>

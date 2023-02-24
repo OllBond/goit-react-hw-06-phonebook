@@ -1,6 +1,5 @@
-import { ADD_CONTACT, DELETE_CONTACT } from './types';
 import { nanoid } from 'nanoid';
-
+import { ADD_CONTACT, DELETE_CONTACT } from './contacts-types';
 // payload - з чим зробити - це наш контакт
 export const addContact = payload => {
   // повертає об'єкт що зробити і з чим зробити
