@@ -40,7 +40,7 @@ const ContactForm = () => {
 
     if (isDublicate({ name, number })) {
       alert(`${name}: ${number} is already in contacts`);
-      return false;
+      return setState({ ...initialState });
     }
     // що зробити
     const action = addContact({ name, number });
