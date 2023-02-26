@@ -9,8 +9,6 @@ import { getFilteredContacts } from 'redux/contacts/contacts-selectors';
 import css from './ContactForm/ContactForm.module.css';
 
 export const App = () => {
-  // const filteredContacts = useSelector(getFilteredContacts);
-
   const isContacts = Boolean(useSelector(getFilteredContacts).length);
   return (
     <div>
