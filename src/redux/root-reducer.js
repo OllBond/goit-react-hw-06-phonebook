@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
 
 // налаштування збереження в localStorage
 const persistConfig = {
-  key: 'root',
+  key: 'my-contacts',
   storage,
 };
 
