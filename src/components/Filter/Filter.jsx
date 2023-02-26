@@ -1,8 +1,14 @@
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { setFilter } from 'redux/filter/filter-slice';
 
 import css from './Filter.module.css';
 
-const Filter = ({ handleInputChange, value }) => {
+const Filter = ({ value }) => {
+  const dispatch = useDispatch();
+
+  const handleFilter = ({ target }) => {
+    dispatch(setFilter(target.value));
+  };
   return (
     <div className={css.conactFormGroup}>
       <label className={css.label}>Find contacts by name</label>
@@ -10,7 +16,7 @@ const Filter = ({ handleInputChange, value }) => {
         className={css.input}
         // зв'язок інпуту і state
         value={value}
-        onChange={handleInputChange}
+        onChange={handleFilter}
         type="text"
         name="filter"
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -22,8 +28,3 @@ const Filter = ({ handleInputChange, value }) => {
 };
 
 export default Filter;
-
-Filter.propTypes = {
-  handleInputChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-};

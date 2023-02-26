@@ -1,15 +1,55 @@
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contacts/contacts-slice';
+import { getAllContacts } from 'redux/contacts/contacts-selectors';
+
 import initialState from './initialState';
-import useForm from 'components/shared/hooks/useForm';
 
 import css from './ContactForm.module.css';
 
-const ContactForm = ({ onSubmit }) => {
-  // кастомний хук
-  const { state, handleChange, handleSubmit } = useForm({
-    initialState,
-    onSubmit,
-  });
+const ContactForm = () => {
+  const [state, setState] = useState({ ...initialState });
+
+  const allContacts = useSelector(getAllContacts);
+  const dispatch = useDispatch();
+
+  // target - це деструктуризація event
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setState(prevState => {
+      return { ...prevState, [name]: value };
+    });
+  };
+
+  const isDublicate = ({ name }) => {
+    const normalizedName = name.toLowerCase();
+    // щоб знайти елемент в масиві
+    // якщо знайщеться в contact буде об'єкт
+    // якщо не здайде - undefind
+    const result = allContacts.find(({ name }) => {
+      return name.toLowerCase() === normalizedName;
+    });
+    // треба повернути або true або false
+    // булеве значення об'єкта - true
+    // булеве значення undefind - false
+    return Boolean(result);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if (isDublicate({ name, number })) {
+      alert(`${name}: ${number} is already in contacts`);
+      return false;
+    }
+    // що зробити
+    const action = addContact({ name, number });
+    // dispatch передає action reducer
+    dispatch(action);
+
+    setState({ ...initialState });
+  };
+
   const { name, number } = state;
   return (
     <div className={css.wrapper}>
@@ -53,7 +93,3 @@ const ContactForm = ({ onSubmit }) => {
 };
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
