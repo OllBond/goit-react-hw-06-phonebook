@@ -9,16 +9,16 @@ import { getFilteredContacts } from 'redux/contacts/contacts-selectors';
 import css from './ContactForm/ContactForm.module.css';
 
 export const App = () => {
-  const filteredContacts = useSelector(getFilteredContacts);
+  // const filteredContacts = useSelector(getFilteredContacts);
 
-  const isContacts = Boolean(filteredContacts.length);
+  const isContacts = Boolean(useSelector(getFilteredContacts).length);
   return (
     <div>
       <h1 className={css.title}>Phonebook</h1>
       <ContactForm />
       <h2 className={css.title}>Contacts</h2>
       <Filter />
-      {isContacts && <ContactList contacts={filteredContacts} />}
+      {isContacts && <ContactList />}
       {!isContacts && <p>No contacts in list</p>}
     </div>
   );
