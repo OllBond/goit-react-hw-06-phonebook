@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import css from '../ContactItem/ContactItem.module.css';
 
-const ContactItem = ({ id, name, number, removeContact }) => {
+const ContactItem = ({ id, name, number }) => {
   const dispatch = useDispatch();
   return (
     <li className={css.listItems}>
