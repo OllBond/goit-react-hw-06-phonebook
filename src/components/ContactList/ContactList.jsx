@@ -6,7 +6,7 @@ import ContactItem from '../ContactItem/ContactItem';
 
 import css from './ContactList.module.css';
 
-const ContactList = ({ contacts }) => {
+const ContactList = () => {
   const filteredContacts = useSelector(getFilteredContacts);
   return (
     <ul className={css.listContact}>
